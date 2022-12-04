@@ -1,0 +1,11 @@
+.clp-lead__element-extra {
+    display: flex;
+}
+
+.clp-lead__element-extra .clp-lead__element-item {
+    margin-right: 1rem;
+}
+
+.extra-info-icon {
+    margin-right: 0.5rem;
+}

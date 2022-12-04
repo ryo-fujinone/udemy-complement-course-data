@@ -1,0 +1,59 @@
+{
+    "description": {
+        "message": "An extension that adds information to Udemy pages."
+    },
+    "isUfbEnabled": {
+        "message": "Enable Udemy Business related functions."
+    },
+    "appliesOnlyOnWww": {
+        "message": "Applies only on www.udemy.com."
+    },
+    "notApplyOnWww": {
+        "message": "Does not apply on www.udemy.com."
+    },
+    "courseId": {
+        "message": "course id"
+    },
+    "shouldWaitForShareBtn": {
+        "message": "Wait for the \"Recommend\" button to appear on the course page."
+    },
+    "pagination": {
+        "message": "Pagination"
+    },
+    "WaitingTimeForPageNumChange": {
+        "message": "Waiting time for page number change."
+    },
+    "millisecond": {
+        "message": "Millisecond"
+    },
+    "cache": {
+        "message": "Cache"
+    },
+    "isCacheEnabled": {
+        "message": "Enable caching of data retrieved from the API."
+    },
+    "appliesOnlyOnSearchResultsPages": {
+        "message": "Applies only on the search results page."
+    },
+    "cacheExpireHours": {
+        "message": "Cache Expiration"
+    },
+    "hour": {
+        "message": "Hour"
+    },
+    "resetSettings": {
+        "message": "Reset settings"
+    },
+    "deleteCache": {
+        "message": "Delete cache"
+    },
+    "createdDate": {
+        "message": "Created date"
+    },
+    "lastUpdateDate": {
+        "message": "Last updated"
+    },
+    "numLectures": {
+        "message": "Number of lectures"
+    }
+}

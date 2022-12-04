@@ -1,0 +1,19 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "globals": {
+        "chrome": true
+    },
+    "extends": ["eslint:recommended", "react-app", "prettier"],
+    "overrides": [],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "react-hooks/exhaustive-deps": "off",
+        "no-prototype-builtins": "off"
+    }
+}

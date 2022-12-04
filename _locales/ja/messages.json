@@ -1,0 +1,59 @@
+{
+    "description": {
+        "message": "Udemyのページ上に情報を追加する拡張機能です。"
+    },
+    "isUfbEnabled": {
+        "message": "Udemy Business関連の処理を有効にする"
+    },
+    "appliesOnlyOnWww": {
+        "message": "www.udemy.com上でのみ適用されます。"
+    },
+    "notApplyOnWww": {
+        "message": "www.udemy.com上では適用されません。"
+    },
+    "courseId": {
+        "message": "コースID"
+    },
+    "shouldWaitForShareBtn": {
+        "message": "コースページで[推奨する]ボタンの出現を待機"
+    },
+    "pagination": {
+        "message": "ページネーション"
+    },
+    "WaitingTimeForPageNumChange": {
+        "message": "ページ番号変更時の待機時間"
+    },
+    "millisecond": {
+        "message": "ミリ秒"
+    },
+    "cache": {
+        "message": "キャッシュ"
+    },
+    "isCacheEnabled": {
+        "message": "APIから取得したデータのキャッシュを有効にする"
+    },
+    "appliesOnlyOnSearchResultsPages": {
+        "message": "検索結果ページ上でのみ適用されます。"
+    },
+    "cacheExpireHours": {
+        "message": "キャッシュの有効期間"
+    },
+    "hour": {
+        "message": "時間"
+    },
+    "resetSettings": {
+        "message": "設定をリセット"
+    },
+    "deleteCache": {
+        "message": "キャッシュを削除"
+    },
+    "createdDate": {
+        "message": "公開日"
+    },
+    "lastUpdateDate": {
+        "message": "最終更新日"
+    },
+    "numLectures": {
+        "message": "レクチャー数"
+    }
+}
