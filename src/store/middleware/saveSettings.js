@@ -5,6 +5,8 @@ const saveSettings = (store) => {
         return async (action) => {
             next(action);
 
+            if (!action.type.includes("settings/")) return;
+
             if (action.payload?.mes !== "restore") {
                 const settings = store.getState().settings;
                 await saveToStorage({ settings });
