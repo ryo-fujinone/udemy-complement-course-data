@@ -1,7 +1,7 @@
 import moment from "moment";
 
 import { getFromStorage, saveToStorage } from "../utils/handleStorage";
-import { getFromManifet } from "../utils/handleManifest";
+import { getFromManifest } from "../utils/handleManifest";
 
 const getCourseCache = async (publishedTitles, settings) => {
     if (!settings.isCourseDataCacheEnabled) return {};
@@ -10,7 +10,7 @@ const getCourseCache = async (publishedTitles, settings) => {
     const courseCache = result.course_cache;
     if (courseCache === undefined) return {};
 
-    const extensionVersion = getFromManifet("version");
+    const extensionVersion = getFromManifest("version");
     const cacheExpireHours = settings.cacheExpireHours;
 
     const validCourseCaches = publishedTitles.reduce((obj, publishedTitle) => {
@@ -37,7 +37,7 @@ const organizeCourseCache = async (settings) => {
     if (courseCache === undefined) return;
 
     const newCourseCache = {};
-    const extensionVersion = getFromManifet("version");
+    const extensionVersion = getFromManifest("version");
     const cacheExpireHours = settings.cacheExpireHours;
 
     for (const key in courseCache) {
@@ -61,7 +61,7 @@ const addToCourseCache = async (values, settings) => {
     const result = await getFromStorage(["course_cache"]);
     const courseCache = result.course_cache ?? {};
     const newCourseCache = structuredClone(courseCache);
-    const extensionVersion = getFromManifet("version");
+    const extensionVersion = getFromManifest("version");
 
     values.forEach((value) => {
         const publishedTitle = value.published_title;

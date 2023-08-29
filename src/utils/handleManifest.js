@@ -1,6 +1,6 @@
-const getFromManifet = (key) => {
+const getFromManifest = (key) => {
     const manifest = chrome.runtime.getManifest();
     return manifest[key];
 };
 
-export { getFromManifet };
+export { getFromManifest };
