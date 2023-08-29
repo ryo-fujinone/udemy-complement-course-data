@@ -111,7 +111,7 @@ const setUfbLink = (data, card, settings) => {
     ufbLink.setAttribute("target", "_blank");
 
     const imgWrapper = card.querySelector(
-        "[class*='course-card--image-wrapper--']"
+        "[class*='course-card-module--image-container--']"
     );
     imgWrapper.append(ufbLink);
     const img = imgWrapper.querySelector("img");
@@ -143,7 +143,7 @@ const addExtraInfo = (data, settings) => {
     if (card === null) return;
 
     const cardRows = card.querySelectorAll(
-        "div[class*='course-card--row--']:not([data-purpose='course-meta-info'])"
+        "div[class*='course-card-details-module--row--']:not([data-purpose='course-meta-info'])"
     );
     const lastCardRow = cardRows[cardRows.length - 1];
     createExtraInfoRow(data, lastCardRow, card, settings);
@@ -158,15 +158,20 @@ const getCards = () => {
         const interval = setInterval(() => {
             count++;
             cards = document.querySelectorAll(
-                "div[class*='course-card--container']:not([class*='course-card--medium--']):not([class*='bundle-unit--bundle-course-card--'])"
+                "div[class*='course-card-module--container']:not([class*='course-card--medium--']):not([class*='bundle-unit--bundle-course-card--'])"
             );
-            const card0ImgSrc = cards[0]
-                .querySelector("img")
-                .getAttribute("src");
-            if (card0ImgSrc.indexOf("data:") !== 0) {
-                clearInterval(interval);
-                resolve(cards);
-            } else if (count >= 100) {
+            try {
+                const card0ImgSrc = cards[0]
+                    ?.querySelector("img")
+                    ?.getAttribute("src");
+                if (card0ImgSrc.indexOf("data:") !== 0) {
+                    clearInterval(interval);
+                    resolve(cards);
+                } else if (count >= 100) {
+                    clearInterval(interval);
+                    reject();
+                }
+            } catch (e) {
                 clearInterval(interval);
                 reject();
             }
@@ -201,14 +206,16 @@ const main = async (settings, cards) => {
     const settings = result.settings ?? getDefaultSettings();
 
     const run = () => {
-        const callback = async (_, { settings }) => {
-            getCards().then((cards) => {
-                try {
-                    main(settings, cards);
-                } catch (e) {
-                    console.error(e);
-                }
-            });
+        const callback = (_, { settings }) => {
+            getCards()
+                .then((cards) => {
+                    try {
+                        main(settings, cards);
+                    } catch (e) {
+                        console.error(e);
+                    }
+                })
+                .catch((e) => {});
         };
 
         waitForKeyElements(
