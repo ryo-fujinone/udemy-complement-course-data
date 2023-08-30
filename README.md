@@ -17,10 +17,10 @@ Udemy のページ上に情報を追加する Chrome の拡張機能です。
 -   `www.udemy.com` のコースリンクを表示。
     -   Udemy Business のコースページ上のみ。
 
-#### 検索結果ページ
+#### 検索結果ページ/カテゴリーページ
 
 -   コースの公開日、最終更新日を表示。
-    -   Udemy Business の検索結果ページでも表示。
+    -   Udemy Business の検索結果ページ/カテゴリーページでも表示。
 -   Udemy Business ラベルを表示。
     -   コースが Udemy Business コンテンツコレクションに含まれている場合のみ。
 -   コースの画像を Udemy Business のリンクとして扱うように。
