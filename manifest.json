@@ -19,7 +19,10 @@
     },
     "content_scripts": [
         {
-            "matches": ["https://*.udemy.com/course/*/"],
+            "matches": [
+                "https://*.udemy.com/course/*/",
+                "https://*.udemy.com/course/*/*"
+            ],
             "js": ["src/content_scripts/course.js"]
         },
         {
