@@ -132,11 +132,6 @@ const main = async (settings) => {
             const callback = (_, { settings }) => {
                 if (canRun) {
                     canRun = false;
-                    // console.log(document.querySelector("[data-purpose='course-title-url']"))
-                    // try {
-                    //     setTimeout(() => {
-                    //         main(settings);
-                    //     }, 1500);
                     try{
                         let _canRun = true;
                         waitForKeyElements(
