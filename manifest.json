@@ -19,16 +19,15 @@
     },
     "content_scripts": [
         {
-            "matches": [
-                "https://*.udemy.com/course/*/",
-                "https://*.udemy.com/course/*/*"
-            ],
+            "matches": ["https://*.udemy.com/course/*/*"],
             "js": ["src/content_scripts/course.js"]
         },
         {
             "matches": [
                 "https://www.udemy.com/courses/search/*",
-                "https://*.udemy.com/organization/search/*"
+                "https://*.udemy.com/organization/search/*",
+                "https://www.udemy.com/topic/*/*",
+                "https://www.udemy.com/courses/*/*"
             ],
             "js": ["src/content_scripts/searchResults.js"]
         },

@@ -158,7 +158,7 @@ const getCards = () => {
         const interval = setInterval(() => {
             count++;
             cards = document.querySelectorAll(
-                "div[class*='course-card-module--container']:not([class*='course-card--medium--']):not([class*='bundle-unit--bundle-course-card--'])"
+                "div[class*='course-card-module--container']:not([class*='course-card-module--medium--']):not([class*='bundle-unit--bundle-course-card--'])"
             );
             try {
                 const card0ImgSrc = cards[0]
