@@ -143,7 +143,7 @@ const addExtraInfo = (data, settings) => {
     if (card === null) return;
 
     const cardRows = card.querySelectorAll(
-        "div[class*='course-card-details-module--row--']:not([data-purpose='course-meta-info'])"
+        "div[class*='course-card-details-module--row--']:not(.ud-text-xs)"
     );
     const lastCardRow = cardRows[cardRows.length - 1];
     createExtraInfoRow(data, lastCardRow, card, settings);
@@ -245,7 +245,7 @@ const main = async (settings, cards) => {
         };
 
         waitForKeyElements(
-            "[class*='pagination--container--'] a",
+            "[class*='pagination-module--container--'] a",
             callback,
             {},
             false,
