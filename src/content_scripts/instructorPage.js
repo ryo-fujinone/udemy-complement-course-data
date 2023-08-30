@@ -76,7 +76,7 @@ const addExtraInfo = (data, settings) => {
     if (card === null) return;
 
     const cardRows = card.querySelectorAll(
-        "div[class*='course-card--row--']:not([data-purpose='course-meta-info'])"
+        "div[class*='course-card-details-module--row--']:not(.ud-text-xs)"
     );
     const lastCardRow = cardRows[cardRows.length - 1];
     createExtraInfoRow(data, lastCardRow, settings);
@@ -91,7 +91,7 @@ const getProfileObj = (profileElem) => {
 
 const main = async (settings) => {
     const cards = document.querySelectorAll(
-        "[class*='course-card--container--']"
+        "[class*='instructor-courses--course-card-container--']"
     );
 
     const publishedTitles = getPublishedTitles(cards);
@@ -132,20 +132,38 @@ const main = async (settings) => {
             const callback = (_, { settings }) => {
                 if (canRun) {
                     canRun = false;
-                    try {
-                        main(settings);
+                    // console.log(document.querySelector("[data-purpose='course-title-url']"))
+                    // try {
+                    //     setTimeout(() => {
+                    //         main(settings);
+                    //     }, 1500);
+                    try{
+                        let _canRun = true;
+                        waitForKeyElements(
+                            "[data-purpose='course-title-url']",
+                            (()=> {
+                                if (_canRun) {
+                                    _canRun = false;
+                                    main(settings)
+                                }
+                            }),
+                            {},
+                            true,
+                            10,
+                            100
+                        )
                     } catch (e) {
                         console.error(e);
                     }
                 }
             };
             waitForKeyElements(
-                "[class*='course-card--container--']",
+                "[class*='instructor-courses--course-card-container--']",
                 callback,
                 { settings },
                 true,
                 100,
-                100
+                1000
             );
         };
         run();
@@ -160,7 +178,7 @@ const main = async (settings) => {
             };
 
             waitForKeyElements(
-                "[class*='pagination--container--'] a",
+                "[class*='pagination-module--container--'] a",
                 callback,
                 {},
                 false,
