@@ -132,21 +132,21 @@ const main = async (settings) => {
             const callback = (_, { settings }) => {
                 if (canRun) {
                     canRun = false;
-                    try{
+                    try {
                         let _canRun = true;
                         waitForKeyElements(
                             "[data-purpose='course-title-url']",
-                            (()=> {
+                            () => {
                                 if (_canRun) {
                                     _canRun = false;
-                                    main(settings)
+                                    main(settings);
                                 }
-                            }),
+                            },
                             {},
                             true,
                             10,
                             100
-                        )
+                        );
                     } catch (e) {
                         console.error(e);
                     }
