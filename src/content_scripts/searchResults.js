@@ -110,8 +110,9 @@ const setUfbLink = (data, card, settings) => {
     ufbLink.setAttribute("href", ufbCourseUrl);
     ufbLink.setAttribute("target", "_blank");
 
+    // selector -> for non-topic pages, for topic page
     const imgWrapper = card.querySelector(
-        "[class*='course-card-module--image-container--']"
+        "[class*='course-card-module--image-container--'], [class*='course-card_image-wrapper']"
     );
     imgWrapper.append(ufbLink);
     const img = imgWrapper.querySelector("img");
@@ -142,8 +143,9 @@ const addExtraInfo = (data, settings) => {
     );
     if (card === null) return;
 
+    // selector -> for non-topic pages, for topic page
     const cardRows = card.querySelectorAll(
-        "div[class*='course-card-details-module--row--']:not(.ud-text-xs)"
+        "div[class*='course-card-details-module--row--']:not(.ud-text-xs), div[class*='course-card_row']:has(> div[class*='course-card_course-meta-info'])"
     );
     const lastCardRow = cardRows[cardRows.length - 1];
     createExtraInfoRow(data, lastCardRow, card, settings);
@@ -152,13 +154,11 @@ const addExtraInfo = (data, settings) => {
 const getCards = () => {
     return new Promise((resolve, reject) => {
         let count = 0;
-        let cards = document.querySelectorAll(
-            "div[class*='course-card--container']"
-        );
         const interval = setInterval(() => {
             count++;
-            cards = document.querySelectorAll(
-                "div[class*='course-card-module--container']:not([class*='course-card-module--medium--']):not([class*='bundle-unit--bundle-course-card--'])"
+            // selector -> for non-topic pages, for topic page
+            const cards = document.querySelectorAll(
+                "div[class*='course-card-module--container']:not([class*='course-card-module--medium--']):not([class*='bundle-unit--bundle-course-card--']), div[class*='course-card_container']:not([class*='bundle-unit']):not([class*='course-card_medium'])"
             );
             try {
                 const card0ImgSrc = cards[0]
@@ -218,8 +218,9 @@ const main = async (settings, cards) => {
                 .catch((e) => {});
         };
 
+        // selector -> for non-topic pages, for topic page
         waitForKeyElements(
-            "div[class*='course-list--container--']",
+            "div[class*='course-list--container'], div[class*='course-list_container']",
             callback,
             { settings },
             true,
@@ -231,8 +232,9 @@ const main = async (settings, cards) => {
 
     const waitForPageNumChange = () => {
         const callback = (a) => {
+            // selector -> for non-topic pages, for topic page
             const container = document.querySelector(
-                "div[class*='course-list--container--']"
+                "div[class*='course-list--container'], div[class*='course-list_container']"
             );
             a.addEventListener("click", () => {
                 if (container) {
@@ -245,7 +247,7 @@ const main = async (settings, cards) => {
         };
 
         waitForKeyElements(
-            "[class*='pagination-module--container--'] a",
+            "[class*='pagination-module--container--'] a, [class*='pagination_container'] a",
             callback,
             {},
             false,
