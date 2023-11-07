@@ -48,7 +48,7 @@
         "message": "キャッシュを削除"
     },
     "createdDate": {
-        "message": "公開日"
+        "message": "作成日"
     },
     "lastUpdateDate": {
         "message": "最終更新日"
