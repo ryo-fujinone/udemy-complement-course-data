@@ -30,12 +30,6 @@ const settingsSlice = createSlice({
                 shouldWaitForShareBtnInUfb: payload,
             };
         },
-        updateWaitingTimeForPageNumChange(state, { payload }) {
-            return {
-                ...state,
-                waitingTimeForPageNumChange: payload,
-            };
-        },
         updateIsCacheEnabled(state, { payload }) {
             return {
                 ...state,
