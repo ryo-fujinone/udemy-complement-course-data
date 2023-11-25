@@ -25,7 +25,7 @@
         {
             "matches": [
                 "https://www.udemy.com/courses/search/*",
-                "https://*.udemy.com/organization/search/*",
+                "https://*.udemy.com/organization/*",
                 "https://www.udemy.com/topic/*/*",
                 "https://www.udemy.com/collection/*/*",
                 "https://*.udemy.com/courses/*/*"
