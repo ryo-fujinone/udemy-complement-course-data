@@ -142,6 +142,7 @@ const addExtraInfo = (data, settings) => {
         `[data-published-title='${publishedTitle}']`
     );
     if (card === null) return;
+    if (card.querySelector("[data-purpose='course-extra-info']")) return;
 
     // selector -> for non-topic pages, for topic page
     const cardRows = card.querySelectorAll(
@@ -160,6 +161,15 @@ const getCards = () => {
             const cards = document.querySelectorAll(
                 "div[class*='course-card-module--container']:not([class*='course-card-module--medium--']):not([class*='bundle-unit--bundle-course-card--']), div[class*='course-card_container']:not([class*='bundle-unit']):not([class*='course-card_medium'])"
             );
+            const filteredCards = Array.from(cards).filter((card) => {
+                if (!card.querySelector("[data-purpose='course-extra-info']")) {
+                    return true;
+                }
+            });
+            if (filteredCards.length === 0) {
+                reject();
+                return;
+            }
             try {
                 const card0ImgSrc = cards[0]
                     ?.querySelector("img")
@@ -205,17 +215,60 @@ const main = async (settings, cards) => {
     const result = await getFromStorage(["settings"]);
     const settings = result.settings ?? getDefaultSettings();
 
+    const runMain = (settings) => {
+        getCards()
+            .then((cards) => {
+                try {
+                    main(settings, cards);
+                } catch (e) {
+                    console.error(e);
+                }
+            })
+            .catch((e) => {});
+    };
+
+    const detectRefresh = (watchedNode) => {
+        new MutationObserver((mutations, _) => {
+            const filtered = mutations.filter((m) => {
+                if (m.addedNodes.length !== 1) return false;
+                const node = m.addedNodes[0];
+                if (node.classList.length === 0) return false;
+                if (
+                    Array.from(node.classList).some((className) =>
+                        /^popper-module--popper/.test(className)
+                    )
+                ) {
+                    // www.udemy.com
+                    return true;
+                } else if (
+                    Array.from(node.classList).some((className) =>
+                        /^course-list-context-menu/.test(className)
+                    )
+                ) {
+                    // ibmcsr.udemy.com
+                    return true;
+                } else if (
+                    Array.from(node.classList).some((className) =>
+                        /^popper_popper__/.test(className)
+                    )
+                ) {
+                    // topic page
+                    return true;
+                }
+            });
+            if (filtered.length !== 0) {
+                runMain(settings);
+            }
+        }).observe(watchedNode, {
+            childList: true,
+            subtree: true,
+        });
+    };
+
     const run = () => {
-        const callback = (_, { settings }) => {
-            getCards()
-                .then((cards) => {
-                    try {
-                        main(settings, cards);
-                    } catch (e) {
-                        console.error(e);
-                    }
-                })
-                .catch((e) => {});
+        const callback = (targetNode, { settings }) => {
+            detectRefresh(targetNode);
+            runMain(settings);
         };
 
         // selector -> for non-topic pages, for topic page
@@ -228,31 +281,6 @@ const main = async (settings, cards) => {
             100
         );
     };
+
     run();
-
-    const waitForPageNumChange = () => {
-        const callback = (a) => {
-            // selector -> for non-topic pages, for topic page
-            const container = document.querySelector(
-                "div[class*='course-list--container'], div[class*='course-list_container']"
-            );
-            a.addEventListener("click", () => {
-                if (container) {
-                    delete container.dataset.userscriptAlreadyfound;
-                }
-                setTimeout(() => {
-                    run();
-                }, settings.waitingTimeForPageNumChange);
-            });
-        };
-
-        waitForKeyElements(
-            "[class*='pagination-module--container--'] a, [class*='pagination_container'] a",
-            callback,
-            {},
-            false,
-            2000
-        );
-    };
-    waitForPageNumChange();
 })();
