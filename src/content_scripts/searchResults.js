@@ -1,25 +1,25 @@
-import "./courseCard.css";
 import getDefaultSettings from "../utils/defaultSettings";
-import waitForKeyElements from "../utils/waitForKeyElements";
 import { generateUfbCourseUrl } from "../utils/generateUrl";
 import { getFromStorage } from "../utils/handleStorage";
+import waitForKeyElements from "../utils/waitForKeyElements";
+import "./courseCard.css";
 
 import {
+    addToCourseCache,
     getCourseCache,
     organizeCourseCache,
-    addToCourseCache,
 } from "../utils/handleCache";
 
 import {
-    generateApiUrls,
-    fetchDataFromApi,
-    getPublishedTitles,
     combineArray,
+    createCardRow,
+    createCardRowInner,
     createCreatedDateItem,
     createLastUpdateDateItem,
     createUfbTextItem,
-    createCardRow,
-    createCardRowInner,
+    fetchDataFromApi,
+    generateApiUrls,
+    getPublishedTitles,
 } from "../utils/createCourseInfo";
 
 const createItems = (data, itemClassName, settings) => {
@@ -239,6 +239,14 @@ const main = async (settings, cards) => {
                     )
                 ) {
                     // www.udemy.com
+                    return true;
+                } else if (
+                    Array.from(node.classList).some((className) =>
+                        /^course-list--card-layout-container/.test(className)
+                    )
+                ) {
+                    // www.udemy.com
+                    // When using pagination with "https://*.udemy.com/courses/*/*"
                     return true;
                 } else if (
                     Array.from(node.classList).some((className) =>
