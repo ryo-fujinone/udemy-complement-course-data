@@ -112,7 +112,7 @@ const setUfbLink = (data, card, settings) => {
 
     // selector -> for non-topic pages, for topic page
     const imgWrapper = card.querySelector(
-        "[class*='course-card-module--image-container--'], [class*='course-card_image-wrapper']"
+        "[class*='course-card-module--image-container--'], [class*='course-card_image-container']"
     );
     imgWrapper.append(ufbLink);
     const img = imgWrapper.querySelector("img");
@@ -146,7 +146,7 @@ const addExtraInfo = (data, settings) => {
 
     // selector -> for non-topic pages, for topic page
     const cardRows = card.querySelectorAll(
-        "div[class*='course-card-details-module--row--']:not(.ud-text-xs), div[class*='course-card_row']:has(> div[class*='course-card_course-meta-info'])"
+        "div[class*='course-card-details-module--row--']:not(.ud-text-xs), div[class*='course-card-details_row']:has(> div[class*='course-card-details_course-meta-info'])"
     );
     const lastCardRow = cardRows[cardRows.length - 1];
     createExtraInfoRow(data, lastCardRow, card, settings);
@@ -257,7 +257,7 @@ const main = async (settings, cards) => {
                     return true;
                 } else if (
                     Array.from(node.classList).some((className) =>
-                        /^popper_popper__/.test(className)
+                        /^course-list_card-layout-container/.test(className)
                     )
                 ) {
                     // topic page
