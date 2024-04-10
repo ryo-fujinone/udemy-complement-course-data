@@ -1,13 +1,9 @@
 import React from "react";
 
-import {
-    updateIsUfbEnabled,
-    updateUfbUrl,
-    updateShouldWaitFor,
-} from "../../store/modules/settings";
+import { updateIsUfbEnabled, updateUfbUrl } from "../../store/modules/settings";
 import { getMessage } from "../../utils/handleI18n";
-import Section from "../atoms/section/Section";
 import H3Title from "../atoms/h/H3Title";
+import Section from "../atoms/section/Section";
 import CheckboxItem from "../molecules/CheckboxItem";
 import TextboxItem from "../molecules/TextboxItem";
 
@@ -18,10 +14,6 @@ const UfbSettings = ({ settings, dispatch }) => {
 
     const handleOnChangeOfUfbUrl = (e) => {
         dispatch(updateUfbUrl(e.target.value));
-    };
-
-    const handleOnChangeOfShouldWaitFor = (e) => {
-        dispatch(updateShouldWaitFor(e.target.checked));
     };
 
     return (
@@ -44,14 +36,6 @@ const UfbSettings = ({ settings, dispatch }) => {
                 value={settings.ufbUrl}
                 disabled={!settings.isUfbRelatedFeaturesEnabled}
                 onChange={handleOnChangeOfUfbUrl}
-            />
-
-            <CheckboxItem
-                labelChild={getMessage("shouldWaitForShareBtn")}
-                supplementaryChild={getMessage("notApplyOnWww")}
-                name="should-wait-for-share-btn"
-                checked={settings.shouldWaitForShareBtnInUfb}
-                onChange={handleOnChangeOfShouldWaitFor}
             />
         </Section>
     );

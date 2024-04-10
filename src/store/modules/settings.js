@@ -24,12 +24,6 @@ const settingsSlice = createSlice({
                 ufbUrl: payload,
             };
         },
-        updateShouldWaitFor(state, { payload }) {
-            return {
-                ...state,
-                shouldWaitForShareBtnInUfb: payload,
-            };
-        },
         updateIsCacheEnabled(state, { payload }) {
             return {
                 ...state,
@@ -49,19 +43,15 @@ const {
     updateSettings,
     updateIsUfbEnabled,
     updateUfbUrl,
-    updateShouldWaitFor,
-    updateWaitingTimeForPageNumChange,
     updateIsCacheEnabled,
     updateCacheExpireHours,
 } = settingsSlice.actions;
 
 export {
-    updateSettings,
-    updateIsUfbEnabled,
-    updateUfbUrl,
-    updateShouldWaitFor,
-    updateWaitingTimeForPageNumChange,
-    updateIsCacheEnabled,
     updateCacheExpireHours,
+    updateIsCacheEnabled,
+    updateIsUfbEnabled,
+    updateSettings,
+    updateUfbUrl,
 };
 export default settingsSlice.reducer;

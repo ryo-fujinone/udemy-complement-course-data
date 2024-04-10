@@ -1,16 +1,16 @@
 import moment from "moment/moment";
 
-import "./course.css";
 import getDefaultSettings from "../utils/defaultSettings";
-import waitForKeyElements from "../utils/waitForKeyElements";
 import { fetchData } from "../utils/handleApi";
-import { getFromStorage } from "../utils/handleStorage";
 import { getMessage } from "../utils/handleI18n";
+import { getFromStorage } from "../utils/handleStorage";
+import waitForKeyElements from "../utils/waitForKeyElements";
+import "./course.css";
 
 import {
+    generateCoursePathApiUrl,
     generateUdemyCourseUrl,
     generateUfbCourseUrl,
-    generateCoursePathApiUrl,
 } from "../utils/generateUrl";
 
 const fixLastUpdateDate = (lastUpdateDateStr, metaWrapper) => {
@@ -160,18 +160,7 @@ const main = async (settings) => {
             300,
             100
         );
-    } else if (!settings.shouldWaitForShareBtnInUfb) {
-        setTimeout(() => {
-            main(settings);
-        }, 2000);
     } else {
-        waitForKeyElements(
-            "button.ud-btn-secondary span + svg[aria-hidden='true']",
-            callback,
-            { settings },
-            true,
-            300,
-            100
-        );
+        main(settings);
     }
 })();
