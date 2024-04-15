@@ -165,6 +165,7 @@ const getCards = () => {
                 if (!card.querySelector("[data-purpose='course-extra-info']")) {
                     return true;
                 }
+                return false;
             });
             if (filteredCards.length === 0) {
                 reject();
@@ -263,6 +264,7 @@ const main = async (settings, cards) => {
                     // topic page
                     return true;
                 }
+                return false;
             });
             if (filtered.length !== 0) {
                 runMain(settings);
