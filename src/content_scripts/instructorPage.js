@@ -1,24 +1,23 @@
-import "./courseCard.css";
 import getDefaultSettings from "../utils/defaultSettings";
-import waitForKeyElements from "../utils/waitForKeyElements";
 import { getFromStorage } from "../utils/handleStorage";
+import "./courseCard.css";
 
 import {
+    addToCourseCache,
     getCourseCache,
     organizeCourseCache,
-    addToCourseCache,
 } from "../utils/handleCache";
 
 import {
-    generateApiUrls,
-    fetchDataFromApi,
-    getPublishedTitles,
     combineArray,
+    createCardRow,
+    createCardRowInner,
     createCreatedDateItem,
     createLastUpdateDateItem,
     createUfbTextItem,
-    createCardRow,
-    createCardRowInner,
+    fetchDataFromApi,
+    generateApiUrls,
+    getPublishedTitles,
 } from "../utils/createCourseInfo";
 
 const createItems1 = (data, itemClassName) => {
@@ -127,59 +126,37 @@ const main = async (settings) => {
         const result = await getFromStorage(["settings"]);
         const settings = result.settings ?? getDefaultSettings();
 
-        const run = () => {
-            let canRun = true;
-            const callback = (_, { settings }) => {
-                if (canRun) {
-                    canRun = false;
-                    try {
-                        let _canRun = true;
-                        waitForKeyElements(
-                            "[data-purpose='course-title-url']",
-                            () => {
-                                if (_canRun) {
-                                    _canRun = false;
-                                    main(settings);
-                                }
-                            },
-                            {},
-                            true,
-                            10,
-                            100
-                        );
-                    } catch (e) {
-                        console.error(e);
+        new MutationObserver(async (_, _observer) => {
+            const container = document.querySelector(
+                "[class*='instructor-courses--instructor-courses-container']"
+            );
+            if (!container) return;
+            const titles = document.querySelectorAll(
+                "[class*='course-card-title-module--title']"
+            );
+            if (!titles.length) return;
+
+            _observer.disconnect();
+            await main(settings);
+
+            new MutationObserver(async (mutations, _observer2) => {
+                const canRun = mutations.some((m) => {
+                    if (!m.addedNodes.length) return false;
+                    for (const nClass of m.addedNodes[0].classList) {
+                        if (
+                            nClass.includes(
+                                "instructor-courses--course-card-container--"
+                            )
+                        ) {
+                            return true;
+                        }
                     }
-                }
-            };
-            waitForKeyElements(
-                "[class*='instructor-courses--course-card-container--']",
-                callback,
-                { settings },
-                true,
-                100,
-                1000
-            );
-        };
-        run();
-
-        const waitForPageNumChange = () => {
-            const callback = (a) => {
-                a.addEventListener("click", () => {
-                    setTimeout(() => {
-                        run();
-                    }, settings.waitingTimeForPageNumChange);
+                    return false;
                 });
-            };
-
-            waitForKeyElements(
-                "[class*='pagination-module--container--'] a",
-                callback,
-                {},
-                false,
-                2000
-            );
-        };
-        waitForPageNumChange();
+                if (canRun) {
+                    await main(settings);
+                }
+            }).observe(container, { childList: true, subtree: true });
+        }).observe(document, { childList: true, subtree: true });
     }
 })();
