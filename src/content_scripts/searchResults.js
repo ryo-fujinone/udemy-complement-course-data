@@ -1,7 +1,6 @@
 import getDefaultSettings from "../utils/defaultSettings";
 import { generateUfbCourseUrl } from "../utils/generateUrl";
 import { getFromStorage } from "../utils/handleStorage";
-import waitForKeyElements from "../utils/waitForKeyElements";
 import "./courseCard.css";
 
 import {
@@ -228,7 +227,7 @@ const main = async (settings, cards) => {
             .catch((e) => {});
     };
 
-    const detectRefresh = (watchedNode) => {
+    const detectRefresh = (courseListContainer) => {
         new MutationObserver((mutations, _) => {
             const filtered = mutations.filter((m) => {
                 if (m.addedNodes.length !== 1) return false;
@@ -269,28 +268,17 @@ const main = async (settings, cards) => {
             if (filtered.length !== 0) {
                 runMain(settings);
             }
-        }).observe(watchedNode, {
-            childList: true,
-            subtree: true,
-        });
+        }).observe(courseListContainer, { childList: true, subtree: true });
     };
 
-    const run = () => {
-        const callback = (targetNode, { settings }) => {
-            detectRefresh(targetNode);
-            runMain(settings);
-        };
-
-        // selector -> for non-topic pages, for topic page
-        waitForKeyElements(
-            "div[class*='course-list--container'], div[class*='course-list_container']",
-            callback,
-            { settings },
-            true,
-            300,
-            100
+    new MutationObserver((_, _observer) => {
+        const courseListContainer = document.querySelector(
+            "div[class*='course-list--container'], div[class*='course-list_container']"
         );
-    };
+        if (!courseListContainer) return;
+        _observer.disconnect();
 
-    run();
+        detectRefresh(courseListContainer);
+        runMain(settings);
+    }).observe(document, { childList: true, subtree: true });
 })();

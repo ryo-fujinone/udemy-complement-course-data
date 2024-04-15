@@ -4,7 +4,6 @@ import getDefaultSettings from "../utils/defaultSettings";
 import { fetchData } from "../utils/handleApi";
 import { getMessage } from "../utils/handleI18n";
 import { getFromStorage } from "../utils/handleStorage";
-import waitForKeyElements from "../utils/waitForKeyElements";
 import "./course.css";
 
 import {
@@ -143,23 +142,18 @@ const main = async (settings) => {
     const result = await getFromStorage(["settings"]);
     const settings = result.settings ?? getDefaultSettings();
 
-    let canRun = true;
-    let callback = (_, { settings }) => {
-        if (canRun) {
-            canRun = false;
-            main(settings);
-        }
-    };
-
     if (window.location.host === "www.udemy.com") {
-        waitForKeyElements(
-            "div[class*='generic-purchase-section--main-cta-container--']",
-            callback,
-            { settings },
-            true,
-            300,
-            100
-        );
+        new MutationObserver((_, _observer) => {
+            const metaWrapper = document.querySelector(
+                ".clp-lead__element-meta"
+            );
+            if (!metaWrapper) return;
+            _observer.disconnect();
+            main(settings);
+        }).observe(document, {
+            childList: true,
+            subtree: true,
+        });
     } else {
         main(settings);
     }
