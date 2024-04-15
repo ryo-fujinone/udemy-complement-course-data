@@ -8,23 +8,8 @@
     "appliesOnlyOnWww": {
         "message": "Applies only on www.udemy.com."
     },
-    "notApplyOnWww": {
-        "message": "Does not apply on www.udemy.com."
-    },
     "courseId": {
         "message": "course id"
-    },
-    "shouldWaitForShareBtn": {
-        "message": "Wait for the \"Recommend\" button to appear on the course page."
-    },
-    "pagination": {
-        "message": "Pagination"
-    },
-    "WaitingTimeForPageNumChange": {
-        "message": "Waiting time for page number change."
-    },
-    "millisecond": {
-        "message": "Millisecond"
     },
     "cache": {
         "message": "Cache"

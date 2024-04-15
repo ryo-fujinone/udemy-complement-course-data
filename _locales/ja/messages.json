@@ -8,23 +8,8 @@
     "appliesOnlyOnWww": {
         "message": "www.udemy.com上でのみ適用されます。"
     },
-    "notApplyOnWww": {
-        "message": "www.udemy.com上では適用されません。"
-    },
     "courseId": {
         "message": "コースID"
-    },
-    "shouldWaitForShareBtn": {
-        "message": "コースページで[推奨する]ボタンの出現を待機"
-    },
-    "pagination": {
-        "message": "ページネーション"
-    },
-    "WaitingTimeForPageNumChange": {
-        "message": "ページ番号変更時の待機時間"
-    },
-    "millisecond": {
-        "message": "ミリ秒"
     },
     "cache": {
         "message": "キャッシュ"
