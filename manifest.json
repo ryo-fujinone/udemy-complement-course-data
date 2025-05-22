@@ -34,10 +34,6 @@
         },
         {
             "matches": ["https://*.udemy.com/user/*/*"],
-            "js": ["src/content_scripts/ufbInstructorPage.jsx"]
-        },
-        {
-            "matches": ["https://www.udemy.com/user/*/*"],
             "js": ["src/content_scripts/instructorPage.js"]
         }
     ],

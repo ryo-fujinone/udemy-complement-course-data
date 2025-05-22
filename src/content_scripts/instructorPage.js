@@ -77,8 +77,15 @@ const addExtraInfo = (data, settings) => {
     const cardRows = card.querySelectorAll(
         "div[class*='course-card-details-module--row--']:not(.ud-text-xs)"
     );
-    const lastCardRow = cardRows[cardRows.length - 1];
-    createExtraInfoRow(data, lastCardRow, settings);
+    let lastCardRow = cardRows[cardRows.length - 1];
+    if (!lastCardRow) {
+        lastCardRow = card.querySelector(
+            "[class^='card-authors-module--authors--']"
+        );
+    }
+    if (lastCardRow) {
+        createExtraInfoRow(data, lastCardRow, settings);
+    }
 };
 
 const getProfileObj = (profileElem) => {
@@ -90,7 +97,7 @@ const getProfileObj = (profileElem) => {
 
 const main = async (settings) => {
     const cards = document.querySelectorAll(
-        "[class*='instructor-courses--course-card-container--']"
+        "section[class^='vertical-card-module--card--']"
     );
 
     const publishedTitles = getPublishedTitles(cards);
@@ -126,37 +133,47 @@ const main = async (settings) => {
         const result = await getFromStorage(["settings"]);
         const settings = result.settings ?? getDefaultSettings();
 
-        new MutationObserver(async (_, _observer) => {
-            const container = document.querySelector(
-                "[class*='instructor-courses--instructor-courses-container']"
-            );
-            if (!container) return;
-            const titles = document.querySelectorAll(
-                "[class*='course-card-title-module--title']"
-            );
-            if (!titles.length) return;
+        let firstRunMain = true;
 
-            _observer.disconnect();
-            await main(settings);
-
-            new MutationObserver(async (mutations, _observer2) => {
-                const canRun = mutations.some((m) => {
-                    if (!m.addedNodes.length) return false;
-                    for (const nClass of m.addedNodes[0].classList) {
-                        if (
-                            nClass.includes(
-                                "instructor-courses--course-card-container--"
-                            )
-                        ) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-                if (canRun) {
-                    await main(settings);
+        const detectRefresh = (container) => {
+            setTimeout(() => {
+                // The courseListContainer is regenerated once, so wait 1 second before moving on to runMain()
+                if (container.isConnected && firstRunMain) {
+                    firstRunMain = false;
+                    main(settings);
                 }
-            }).observe(container, { childList: true, subtree: true });
+            }, 1000);
+
+            new MutationObserver((mutations, _) => {
+                const filtered = mutations.filter((m) => {
+                    if (m.addedNodes.length !== 1) return false;
+                    const node = m.addedNodes[0];
+                    if (node.classList.length === 0) return false;
+                    const cardAdded = node.matches(
+                        "[class*='courses-module--content-grid--'] > [class^='content-grid-item-module--item--']"
+                    );
+                    return cardAdded;
+                });
+                if (filtered.length !== 0) {
+                    main(settings);
+                }
+            }).observe(container, {
+                childList: true,
+                subtree: true,
+                characterData: true,
+            });
+        };
+
+        const random = window.crypto.randomUUID().replaceAll("-", "");
+
+        new MutationObserver(async (_, _observer) => {
+            const containers = document.querySelectorAll(
+                `[class^='with-loading-module--container--'] [class*='courses-module--content-grid--']:not([data-detected-from-ext${random}='true'])`
+            );
+            containers.forEach((container) => {
+                container.dataset[`detectedFromExt${random}`] = "true";
+                detectRefresh(container);
+            });
         }).observe(document, { childList: true, subtree: true });
     }
 })();

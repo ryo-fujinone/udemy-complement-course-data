@@ -152,6 +152,7 @@ const addExtraInfo = (data, settings) => {
     );
     let lastCardRow = cardRows[cardRows.length - 1];
     if (!lastCardRow) {
+        //  Search result page for 'www.udemy.com'
         lastCardRow = card.querySelector(
             "[class^='card-authors-module--authors--']"
         );
