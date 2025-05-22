@@ -26,8 +26,9 @@ const getPublishedTitles = (cards) => {
     const publishedTitleRegex = /^\/course\/(.+)\/$/;
     const publishedTitles = [];
     cards.forEach((card) => {
+        // The latter is the selector for “https://www.udemy.com/courses/search/*”
         const linkElem = card.querySelector(
-            "[data-purpose='course-title-url'] a"
+            "[data-purpose='course-title-url'] a, [class^='ud-heading-lg card-title-module--title-'] a"
         );
         const href = linkElem.getAttribute("href");
         const match = href.match(publishedTitleRegex);
@@ -98,13 +99,13 @@ const createCardRowInner = (cardRowClassName) => {
 };
 
 export {
-    generateApiUrls,
-    fetchDataFromApi,
-    getPublishedTitles,
     combineArray,
+    createCardRow,
+    createCardRowInner,
     createCreatedDateItem,
     createLastUpdateDateItem,
     createUfbTextItem,
-    createCardRow,
-    createCardRowInner,
+    fetchDataFromApi,
+    generateApiUrls,
+    getPublishedTitles,
 };

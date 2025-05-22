@@ -2,7 +2,10 @@ div[data-purpose="course-extra-info"] span {
     color: #6a6f73;
 }
 
-div[data-purpose="course-extra-info"] span:not(:first-child)::before {
+div[data-purpose="course-extra-info"]:not(
+        [class^="card-authors-module--authors--"]
+    )
+    span:not(:first-child)::before {
     content: "\25CF";
     margin: 0 0.4rem;
     font-size: 6px;

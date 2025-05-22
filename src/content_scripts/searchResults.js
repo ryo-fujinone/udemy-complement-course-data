@@ -132,7 +132,10 @@ const createExtraInfoRow = (data, lastCardRow, card, settings) => {
 
     lastCardRow.after(cardRow);
 
-    setUfbLink(data, card, settings);
+    const regex = /^https:\/\/www\.udemy\.com\/courses\/search\/.*/;
+    if (!regex.test(window.location.href)) {
+        setUfbLink(data, card, settings);
+    }
 };
 
 const addExtraInfo = (data, settings) => {
@@ -147,11 +150,18 @@ const addExtraInfo = (data, settings) => {
     const cardRows = card.querySelectorAll(
         "div[class*='course-card-details-module--row--']:not(.ud-text-xs), div[class*='course-card-details_row']:has(> div[class*='course-card-details_course-meta-info'])"
     );
-    const lastCardRow = cardRows[cardRows.length - 1];
-    createExtraInfoRow(data, lastCardRow, card, settings);
+    let lastCardRow = cardRows[cardRows.length - 1];
+    if (!lastCardRow) {
+        lastCardRow = card.querySelector(
+            "[class^='card-authors-module--authors--']"
+        );
+    }
+    if (lastCardRow) {
+        createExtraInfoRow(data, lastCardRow, card, settings);
+    }
 };
 
-const getCards = () => {
+const getCards1 = () => {
     return new Promise((resolve, reject) => {
         let count = 0;
         const interval = setInterval(() => {
@@ -161,10 +171,10 @@ const getCards = () => {
                 "div[class*='course-card-module--container']:not([class*='course-card-module--medium--']):not([class*='bundle-unit--bundle-course-card--']), div[class*='course-card_container']:not([class*='bundle-unit']):not([class*='course-card_medium'])"
             );
             const filteredCards = Array.from(cards).filter((card) => {
-                if (!card.querySelector("[data-purpose='course-extra-info']")) {
-                    return true;
+                if (card.querySelector("[data-purpose='course-extra-info']")) {
+                    return false;
                 }
-                return false;
+                return true;
             });
             if (filteredCards.length === 0) {
                 reject();
@@ -189,6 +199,19 @@ const getCards = () => {
     });
 };
 
+const getCards2 = () => {
+    const cards = document.querySelectorAll(
+        "[class^='search--search-course-card'][id]"
+    );
+    const filteredCards = Array.from(cards).filter((card) => {
+        if (card.querySelector("[data-purpose='course-extra-info']")) {
+            return false;
+        }
+        return true;
+    });
+    return filteredCards;
+};
+
 const main = async (settings, cards) => {
     const publishedTitles = getPublishedTitles(cards);
     if (publishedTitles.length === 0) return;
@@ -211,12 +234,9 @@ const main = async (settings, cards) => {
     await addToCourseCache(combinedValues, settings);
 };
 
-(async () => {
-    const result = await getFromStorage(["settings"]);
-    const settings = result.settings ?? getDefaultSettings();
-
+const prepare1 = async (settings) => {
     const runMain = (settings) => {
-        getCards()
+        getCards1()
             .then((cards) => {
                 try {
                     main(settings, cards);
@@ -281,4 +301,68 @@ const main = async (settings, cards) => {
         detectRefresh(courseListContainer);
         runMain(settings);
     }).observe(document, { childList: true, subtree: true });
+};
+
+const prepare2 = (settings) => {
+    const runMain = (settings) => {
+        const cards = getCards2();
+        if (cards.length > 0) {
+            main(settings, cards);
+        }
+    };
+
+    let firstRunMain = true;
+
+    const detectRefresh = (courseListContainer) => {
+        setTimeout(() => {
+            // The courseListContainer is regenerated once, so wait 1 second before moving on to runMain()
+            if (courseListContainer.isConnected && firstRunMain) {
+                firstRunMain = false;
+                runMain(settings);
+            }
+        }, 1000);
+
+        new MutationObserver((mutations, _) => {
+            const filtered = mutations.filter((m) => {
+                if (m.addedNodes.length !== 1) return false;
+                const node = m.addedNodes[0];
+                if (node.classList.length === 0) return false;
+                const cardAdded = node.matches(
+                    "[class^='search--search-course-card'][id] [class^='prefetching-wrapper-module--prefetching-wrapper']"
+                );
+                return cardAdded;
+            });
+            if (filtered.length !== 0) {
+                runMain(settings);
+            }
+        }).observe(courseListContainer, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+        });
+    };
+
+    const random = window.crypto.randomUUID().replaceAll("-", "");
+
+    new MutationObserver((_, _observer) => {
+        const courseListContainers = document.querySelectorAll(
+            `div[class*='course-list--container']:not([data-detected-from-ext${random}='true'])`
+        );
+        courseListContainers.forEach((container) => {
+            container.dataset[`detectedFromExt${random}`] = "true";
+            detectRefresh(container);
+        });
+    }).observe(document, { childList: true, subtree: true });
+};
+
+(async () => {
+    const result = await getFromStorage(["settings"]);
+    const settings = result.settings ?? getDefaultSettings();
+
+    const regex = /^https:\/\/www\.udemy\.com\/courses\/search\/.*/;
+    if (!regex.test(window.location.href)) {
+        prepare1(settings);
+    } else {
+        prepare2(settings);
+    }
 })();
